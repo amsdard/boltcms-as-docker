@@ -1,0 +1,58 @@
+version: '3'
+
+services:
+  mysql:
+    image: mariadb:10
+    container_name: mysql.{name}.docker
+    stdin_open: true
+    tty: true
+    networks:
+      - global
+    env_file:
+       - ./docker/mysql/config.env
+    volumes:
+       - ~/data/mysql.{name}.docker:/var/lib/mysql
+    restart: always
+
+  php:
+    image: amsdard.io/{name}/php:1.0
+    container_name: php.{name}.docker
+    build:
+        context: ./
+        dockerfile: ./docker/php/Dockerfile
+    networks:
+      - global
+    stdin_open: true
+    tty: true
+    env_file:
+       - ./.env
+    volumes:
+       - ./:/opt:cached
+       - ~/.ssh:/var/www/.ssh:cached
+       - ~/.docker-composer:/var/www/.composer:cached
+    links:
+       - mysql
+    restart: always
+
+  nginx:
+    image: amsdard.io/{name}/nginx:1.0
+    container_name: nginx.{name}.docker
+    build:
+        context: ./
+        dockerfile: ./docker/nginx/Dockerfile
+    networks:
+      - global
+    stdin_open: true
+    tty: true
+    labels:
+       traefik.frontend.rule: "HostRegexp:{subdomain}.{name}.test,{name}.test"
+    volumes:
+       - ./public:/opt/public:cached
+       - ./docker/nginx/:/etc/nginx/conf.d:cached
+    links:
+       - php
+    restart: always
+
+networks:
+  global:
+    external: true

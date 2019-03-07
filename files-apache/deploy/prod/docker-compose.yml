@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:5-alpine
+    container_name: prod.redis.{name}.docker
+    command: 'redis-server --save "" --appendonly no'
+    stdin_open: true
+    tty: true
+    networks:
+      - global
+    restart: always
+
+  mysql:
+    image: mariadb:10
+    container_name: prod.mysql.{name}.docker
+    stdin_open: true
+    tty: true
+    networks:
+      - global
+    env_file:
+       - ./docker/mysql/config.env
+    volumes:
+       - ~/data/mysql.{name}.prod:/var/lib/mysql
+    restart: always
+
+  webapp:
+    image: amsdard.io/{name}/webapp:1.0
+    container_name: prod.webapp.{name}.docker
+    networks:
+      - global
+    stdin_open: true
+    tty: true
+    labels:
+       traefik.frontend.rule: "HostRegexp:{subdomain}.{name}.prod,{name}.prod"
+    env_file:
+       - ./docker/webapp/config.env
+    links:
+       - mysql
+       - redis
+    restart: always
+
+networks:
+  global:
+    external: true

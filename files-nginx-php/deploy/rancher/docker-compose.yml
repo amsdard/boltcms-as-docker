@@ -1,0 +1,32 @@
+version: '2'
+services:
+  nginx:
+    image: amsdard.io/{name}/nginx:1.0
+    stdin_open: true
+    tty: true
+    links:
+    - php:php
+    labels:
+      traefik.enable: 'true'
+      traefik.domain: app.amsdard.io
+      io.rancher.container.pull_image: always
+      traefik.alias: {name}
+  php:
+    image: amsdard.io/{name}/php:1.0
+    stdin_open: true
+    tty: true
+    links:
+    - mysql:mysql
+    volumes:
+      - {name}-php-config:/opt/app/config
+      - {name}-php-cache:/opt/app/cache
+      - {name}-php-files:/opt/public/files
+      - {name}-php-thumbs:/opt/public/thumbs
+    labels:
+      io.rancher.container.pull_image: always
+  mysql:
+    image: mariadb:10
+    stdin_open: true
+    volumes:
+    - {name}-mysql-var-lib-mysql:/var/lib/mysql
+    tty: true

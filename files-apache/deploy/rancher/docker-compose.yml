@@ -1,0 +1,25 @@
+version: '2'
+services:
+  webapp:
+    image: amsdard.io/{name}/webapp:1.0
+    stdin_open: true
+    tty: true
+    links:
+    - mysql:mysql
+    - redis:redis
+    labels:
+      traefik.enable: 'true'
+      traefik.domain: app.amsdard.io
+      io.rancher.container.pull_image: always
+      traefik.alias: {name}
+  mysql:
+    image: mariadb:10
+    stdin_open: true
+    volumes:
+    - {name}-mysql-var-lib-mysql:/var/lib/mysql
+    tty: true
+  redis:
+    image: redis:5-alpine
+    command: 'redis-server --save "" --appendonly no'
+    stdin_open: true
+    tty: true

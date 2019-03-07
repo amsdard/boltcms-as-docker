@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  mysql:
+    image: mariadb:10
+    container_name: prod.mysql.{name}.docker
+    stdin_open: true
+    tty: true
+    networks:
+      - global
+    env_file:
+       - ./docker/mysql/config.env
+    volumes:
+       - ~/data/prod.mysql.{name}.docker:/var/lib/mysql
+    restart: always
+
+  php:
+    image: amsdard.io/{name}/php:1.0
+    container_name: prod.php.{name}.docker
+    networks:
+      - global
+    stdin_open: true
+    tty: true
+    env_file:
+       - ./docker/php/config.env
+    volumes:
+       - ~/data/prod.php.{name}.docker/config:/opt/app/config
+       - ~/data/prod.php.{name}.docker/cache:/opt/app/cache
+       - ~/data/prod.php.{name}.docker/files:/opt/public/files
+       - ~/data/prod.php.{name}.docker/thumbs:/opt/public/thumbs
+    links:
+       - mysql
+    restart: always
+
+  nginx:
+    image: amsdard.io/{name}/nginx:1.0
+    container_name: prod.nginx.{name}.docker
+    networks:
+      - global
+    stdin_open: true
+    tty: true
+    labels:
+       traefik.enable: "true"
+       traefik.frontend.rule: "Host:{name}.prod"
+    volumes:
+       - ~/data/prod.php.{name}.docker/files:/opt/public/files
+       - ~/data/prod.php.{name}.docker/thumbs:/opt/public/thumbs
+    links:
+       - php
+    restart: always
+
+networks:
+  global:
+    external: true

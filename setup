@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+## vendor source directory
+VENDOR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+## user project directory path
+PROJECT_DIR=$(pwd)
+## user project directory name
+PROJECT_NAME=${PWD##*/}
+## file structure mode: apache or nginx+php
+PROJECT_MODE=${1:-nginx-php}
+
+## check mode
+if [[ ! -d "$VENDOR_DIR/files-$PROJECT_MODE" ]]; then
+    printf "use $0 apache|nginx-php";
+    exit 1;
+fi;
+
+## install once only
+if [[ -f "$PROJECT_DIR/docker-compose.yml" ]]; then
+    exit 0;
+fi;
+
+## copy files
+scp -rp "$VENDOR_DIR/files-$PROJECT_MODE/deploy" "$PROJECT_DIR/deploy"
+scp -rp "$VENDOR_DIR/files-$PROJECT_MODE/docker" "$PROJECT_DIR/docker"
+scp -rp "$VENDOR_DIR/files-$PROJECT_MODE/Yakefile" "$PROJECT_DIR/"
+scp -rp "$VENDOR_DIR/files-$PROJECT_MODE/docker-compose.yml" "$PROJECT_DIR/"
+scp -rp "$VENDOR_DIR/files-$PROJECT_MODE/README.md" "$PROJECT_DIR/"
+scp -rp "$VENDOR_DIR/files-$PROJECT_MODE/.env.dist" "$PROJECT_DIR/"
+
+## make docker-compose.yml complete
+perl -pi -w -e "s/{name}/$PROJECT_NAME/g" "$PROJECT_DIR/README.md"
+perl -pi -w -e "s/{name}/$PROJECT_NAME/g" "$PROJECT_DIR/docker-compose.yml"
+perl -pi -w -e "s/{name}/$PROJECT_NAME/g" "$PROJECT_DIR/deploy/rancher/docker-compose.yml"
+perl -pi -w -e "s/{name}/$PROJECT_NAME/g" "$PROJECT_DIR/deploy/prod/docker-compose.yml"
+
+## complete .gitignore
+cat "$VENDOR_DIR/files-$PROJECT_MODE/.gitignore" >> "$PROJECT_DIR/.gitignore"

@@ -28,6 +28,10 @@ scp -rp "$VENDOR_DIR/files-$PROJECT_MODE/docker-compose.yml" "$PROJECT_DIR/"
 scp -rp "$VENDOR_DIR/files-$PROJECT_MODE/README.md" "$PROJECT_DIR/"
 scp -rp "$VENDOR_DIR/files-$PROJECT_MODE/.env.dist" "$PROJECT_DIR/"
 
+if [ "$PROJECT_MODE" = "apache" ]; then
+    scp -rp "$VENDOR_DIR/files-$PROJECT_MODE/.htaccess" "$PROJECT_DIR/"
+fi
+
 ## make docker-compose.yml complete
 perl -pi -w -e "s/{name}/$PROJECT_NAME/g" "$PROJECT_DIR/README.md"
 perl -pi -w -e "s/{name}/$PROJECT_NAME/g" "$PROJECT_DIR/docker-compose.yml"

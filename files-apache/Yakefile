@@ -35,19 +35,18 @@ deploy:
 
 install:
   - $BIN composer install
-  - $BIN yarn install
 
 # Seeds database with sample user and site - for one time use per deployment.
 populate:
 
 # Fresh installation process - to be run one time
 configure:
-   - "[[ ! -f .env ]] && cp .env.dist .env"
-   - "[[ ! -f docker/mysql/config.env ]] && cp docker/mysql/config.env.dist docker/mysql/config.env"
-   - "[[ ! -d vendor ]] && mkdir vendor"
-   - curl -fsSL 'https://getcomposer.org/composer.phar' -o ./composer.phar
+  - "[[ ! -f .env ]] && cp .env.dist .env"
+  - "[[ ! -f .bolt.yml.dist ]] && cp .bolt.yml.dist .bolt.yml"
+  - "[[ ! -f .composer.json.dist ]] && cp .composer.json.dist .composer.json"
+  - "[[ ! -f docker/mysql/config.env ]] && cp docker/mysql/config.env.dist docker/mysql/config.env"
+  - curl -fsSL 'https://getcomposer.org/composer.phar' -o ./composer.phar
 
 # default values
 _config:
   FORCE_ALL: 1
-  ENV: dev

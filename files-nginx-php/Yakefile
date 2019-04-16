@@ -40,10 +40,7 @@ populate:
 
 # Fresh installation process - to be run one time
 configure:
-  - "[[ ! -f .env ]] && cp .env.dist .env"
-  - "[[ ! -f .bolt.yml.dist ]] && cp .bolt.yml.dist .bolt.yml"
-  - "[[ ! -f .composer.json.dist ]] && cp .composer.json.dist .composer.json"
-  - "[[ ! -f docker/mysql/config.env ]] && cp docker/mysql/config.env.dist docker/mysql/config.env"
+  - find . -name '*.dist' -exec bash -c 'cp "$1" "${1%.dist}"' - '{}' \;
   - curl -fsSL 'https://getcomposer.org/composer.phar' -o ./composer.phar
 
 # default values

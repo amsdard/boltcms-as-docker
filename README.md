@@ -28,8 +28,8 @@ composer require amsdard/boltcms-as-docker
 
 [alternative] as an alternative you can use *apache* mode
 ```
-composer require amsdard/boltcms-as-docker apache
-./vendor/amsdard/boltcms-as-docker/setup
+composer require amsdard/boltcms-as-docker
+./vendor/amsdard/boltcms-as-docker/setup apache
 ```
 
 run the project
@@ -52,6 +52,10 @@ and optionally other params by your environment variables (`.env`).
 
 open URL `http://newproject.com.test/` and enjoy your new BoltCMS!
 
+You can also run the following command to setup the webpage:
+```
+yake nut setup:run
+```
 
 Production deploy
 ---

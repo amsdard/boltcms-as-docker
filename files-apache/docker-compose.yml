@@ -34,7 +34,6 @@ services:
        - ~/.docker-composer:/var/www/.composer:cached
     links:
        - mysql
-       - redis
     restart: always
 
 networks:

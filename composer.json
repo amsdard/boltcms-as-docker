@@ -1,3 +1,4 @@
 {
-    "name": "amsdard/boltcms-as-docker"
+    "name": "amsdard/boltcms-as-docker",
+    "license": "MIT"
 }

@@ -1,5 +1,7 @@
 FROM amsdard/php-webapp:7
 
+RUN docker-php-ext-install exif
+
 ENV WORKDIR=/opt
 
 # build apache

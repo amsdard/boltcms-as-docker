@@ -1,4 +1,4 @@
-php: docker-compose exec php entrypoint php $CMD
+php: docker-compose exec webapp entrypoint php $CMD
 composer: $BIN php ./composer.phar $CMD
 node: "docker run -it --rm -w /usr/src/app
       -v $(pwd):/usr/src/app -v ~/.docker-node-cache:/home/node/cache -v ~/.ssh:/home/node/.ssh

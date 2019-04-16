@@ -6,7 +6,11 @@ services:
     tty: true
     links:
     - mysql:mysql
-    - redis:redis
+    volumes:
+      - {name}-webapp-config:/opt/app/config
+      - {name}-webapp-cache:/opt/app/cache
+      - {name}-webapp-files:/opt/public/files
+      - {name}-webapp-thumbs:/opt/public/thumbs
     labels:
       traefik.enable: 'true'
       traefik.domain: app.amsdard.io
@@ -17,9 +21,4 @@ services:
     stdin_open: true
     volumes:
     - {name}-mysql-var-lib-mysql:/var/lib/mysql
-    tty: true
-  redis:
-    image: redis:5-alpine
-    command: 'redis-server --save "" --appendonly no'
-    stdin_open: true
     tty: true

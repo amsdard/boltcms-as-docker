@@ -42,7 +42,7 @@ yake nut init
 setup MySQL database, by opening `./app/config/config.yml` and update the following section:
 ```
 database:
-    driver: %DATABASE_DRIVER%
+    driver: mysql
     host: %DATABASE_HOST%
     databasename: %DATABASE_NAME%
     username: %DATABASE_USERNAME%

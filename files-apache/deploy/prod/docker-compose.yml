@@ -1,16 +1,6 @@
 version: '3'
 
 services:
-  redis:
-    image: redis:5-alpine
-    container_name: prod.redis.{name}.docker
-    command: 'redis-server --save "" --appendonly no'
-    stdin_open: true
-    tty: true
-    networks:
-      - global
-    restart: always
-
   mysql:
     image: mariadb:10
     container_name: prod.mysql.{name}.docker
@@ -31,13 +21,18 @@ services:
       - global
     stdin_open: true
     tty: true
+    volumes:
+      - ~/data/prod.webapp.{name}.docker/config:/opt/app/config
+      - ~/data/prod.webapp.{name}.docker/cache:/opt/app/cache
+      - ~/data/prod.webapp.{name}.docker/files:/opt/public/files
+      - ~/data/prod.webapp.{name}.docker/thumbs:/opt/public/thumbs
     labels:
-       traefik.frontend.rule: "HostRegexp:{subdomain}.{name}.prod,{name}.prod"
+      traefik.enable: "true"
+      traefik.frontend.rule: "Host:{name}.prod"
     env_file:
        - ./docker/webapp/config.env
     links:
        - mysql
-       - redis
     restart: always
 
 networks:

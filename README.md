@@ -1,61 +1,42 @@
 AS docker - BoltCMS
 ========================
-implement Docker into your BoltCMS (^3.x) project
-
+implement Docker into your BoltCMS (^4.x) project
+https://boltcms.io
 
 Requirements
 ---
- * configure your local [projects enrironment](https://bitbucket.org/as-docker/projects-environment)
- * make sure You have [YAKE](https://yake.amsdard.io/) installed
+ * [AS-docker](https://as-docker.app.amsdard.io) setup
+ * install composer globally [global composer command](https://hub.docker.com/r/amsdard/composer/)
 
 
 Install - Full sample (when you install a new project)
 ---
 In your `~/Projects` directory, create a new project (a new `newproject.com` directory will be created)
+NOTICE 01/2021: add `--ignore-platform-reqs`, PHP 8.x is not supported yet, use 7.x instead, 
+  also ignore `@auto-scripts` fails
 ```
-mkdir ~/Projects/newproject.com
-cd ~/Projects/newproject.com
-curl -O https://bolt.cm/distribution/bolt-latest.tar.gz
-tar -xzf bolt-latest.tar.gz --strip-components=1
-rm -f bolt-latest.tar.gz
+cd ~/Projects/
+composer create-project --ignore-platform-reqs bolt/project newproject.com
 ```
 
 install as-docker (*nginx* + *php* by default)
 ```
-composer require amsdard/boltcms-as-docker
+composer require --ignore-platform-reqs amsdard/boltcms-as-docker
 ./vendor/amsdard/boltcms-as-docker/setup
 ```
 
-[alternative] as an alternative you can use *apache* mode
-```
-composer require amsdard/boltcms-as-docker
-./vendor/amsdard/boltcms-as-docker/setup apache
-```
 
 run the project
 ```
 yake configure
 yake up
-yake nut init
+yake install
 ```
 
-setup MySQL database, by opening `./app/config/config.yml` and update the following section:
-```
-database:
-    driver: mysql
-    host: %DATABASE_HOST%
-    databasename: %DATABASE_NAME%
-    username: %DATABASE_USERNAME%
-    password: %DATABASE_PASSWORD%
-```
-and optionally other params by your environment variables (`.env`).
+see https://docs.bolt.cm/installation/installation for additional info
 
 open URL `http://newproject.com.test/` and enjoy your new BoltCMS!
 
-You can also run the following command to setup the webpage:
-```
-yake nut setup:run
-```
 
 Production deploy
 ---

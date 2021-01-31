@@ -1,18 +1,8 @@
 php: docker-compose exec php entrypoint php $CMD
 composer: $BIN php ./composer.phar $CMD
-node: "docker run -it --rm -w /usr/src/app
-      -v $(pwd):/usr/src/app -v ~/.docker-node-cache:/home/node/cache -v ~/.ssh:/home/node/.ssh
-      amsdard/node:10 $CMD"
-
-# aliases
-npm: $BIN node npm $CMD
-yarn: $BIN node yarn $CMD
-bower: $BIN node bower $CMD
-grunt: $BIN node grunt $CMD
-gulp: $BIN node gulp $CMD
 
 # BoltCMS
-nut: $BIN php app/nut $CMD
+console: $BIN php bin/console $CMD
 
 # Up project.
 up:
@@ -34,13 +24,17 @@ deploy:
 
 install:
   - $BIN composer install
+  - $BIN console bolt:copy-themes
+  - $BIN console bolt:setup
 
 # Seeds database with sample user and site - for one time use per deployment.
 populate:
 
 # Fresh installation process - to be run one time
 configure:
-  - find . -name '*.dist' -exec bash -c 'cp "$1" "${1%.dist}"' - '{}' \;
+  - cp .env.dist .env
+  - cp .bolt.yml.dist .bolt.yml
+  - cp docker/mysql/config.env.dist docker/mysql/config.env
   - curl -fsSL 'https://getcomposer.org/composer.phar' -o ./composer.phar
 
 # default values

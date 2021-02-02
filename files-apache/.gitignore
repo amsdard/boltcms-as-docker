@@ -1,5 +1,0 @@
-
-###> amsdard/boltcms-as-docker ###
-/docker/*/*.env
-/composer.phar
-###< amsdard/boltcms-as-docker ###
